@@ -1,35 +1,44 @@
 # PSQL Testing Ground
 
-This is a simple Rust project which uses built in [Cargo](https://doc.rust-lang.org/cargo/) test runner and [SQLx](https://crates.io/crates/sqlx) library to setup and run [PostgreSQL](https://www.postgresql.org/) schema tests.
+This is a simple [Rust](https://www.rust-lang.org/) project which uses built in [Cargo](https://doc.rust-lang.org/cargo/) test runner and [SQLx](https://crates.io/crates/sqlx) library to setup and run [PostgreSQL](https://www.postgresql.org/) schema tests.
 
-## Install
+## Setup
 
-Install SQLx CLI tool:
+1. Install [PostgreSQL](https://www.postgresql.org/download)
 
-```sh
-cargo install sqlx-cli
-```
+2. Install [Rust](https://www.rust-lang.org/learn/get-started)
 
-Copy the example environment file:
+3. Install SQLx CLI tool:
 
-```
-cp .env.example .env
-```
+   ```sh
+   cargo install sqlx-cli
+   ```
 
-Edit the environment variables in the copied file:
+4. Clone the project
 
-- `DATABASE_URL`: Full connection string to a test database. The user must have full permissions to edit the database.
+   ```sh
+   git clone git@github.com:malj/psql-test.git
+   ```
 
-## Migrations
+5. Switch to the project root
 
-Create a new migration:
+   ```sh
+   cd psql-test
+   ```
 
-- `r` flag creates an up/down pair to enable reverting
-- `s` flag uses sequential versioning instead of timestamps
+6. Copy the example environment file in the project root:
 
-```sh
-sqlx migrate add -rs <NAME>
-```
+   ```sh
+   cp .env.example .env
+   ```
+
+7. Edit the environment variables in the copied `.env` file:
+
+   - `DATABASE_URL`: Full connection string to a test database. The user must have full permissions to edit the database.
+
+## Usage
+
+### Migrating the schema
 
 Apply the latest migrations:
 
@@ -42,3 +51,22 @@ Revert a single migration, or optionally to a specific version (0 = all):
 ```sh
 sqlx migrate revert [--target-version <VERSION>]
 ```
+
+Create a new migration:
+
+- `r` flag creates an up/down pair to enable reverting
+- `s` flag uses sequential versioning instead of timestamps
+
+```sh
+sqlx migrate add -rs <NAME>
+```
+
+### Testing
+
+After applying the required migrations, run the tests using Cargo test runner:
+
+```sh
+cargo test [<NAME_PATTERN>]
+```
+
+This will download all the dependencies and run all tests. If a name pattern is specified, only test functions with matching names will be executed.
